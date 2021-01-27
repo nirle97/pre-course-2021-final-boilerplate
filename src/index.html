@@ -3,8 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My TODO List</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous"/>
+    <title>TODO List</title>
     <script src="utils.js"></script>
   </head>
-  <body></body>
+  <body>
+    <header>
+      <nav>
+        <ul></ul>
+      </nav>
+      <h1 class="doit-logo"><img src="./doitLogo.jpg" alt="doit-logo"> </h1>
+      <h2>DO-IT <br> Simple & Elegant Way To organize Your Tasks</h2>
+    </header>
+    <section>
+      <div id="counter"></div>
+      <button id="sort-button">Sort Tasks By Priority</button>
+      <div class="control-section">
+        <input type="text" name="task" id="text-input">
+        <select name="priority" id="priority-selector">
+          <optgroup label='Not Important'>
+            <option value="1">1</option>
+          </optgroup>
+          <optgroup label='Somewhat Important'>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </optgroup>
+          <optgroup label='Very Important'>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </optgroup>
+        </select>
+        <button id="add-button" type="submit">
+          <i class="fas fa-plus-square"></i>
+        </button>
+      </div>
+    </section>
+    <section>
+      <div class="view-section">
+      </div>
+    </section>
+    <script src="./main.js"></script>
+  </body>
 </html>

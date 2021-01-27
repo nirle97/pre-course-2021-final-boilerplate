@@ -1,0 +1,53 @@
+const body = document.body;
+const viewSection = document.querySelector(".view-section");  
+const textInput = document.querySelector('#text-input'); 
+const addTaskButton = document.querySelector('#add-button'); 
+const prioritySelector = document.querySelector('#priority-selector'); 
+const counter = document.querySelector('#counter'); 
+const sortButton = document.querySelector('#sort-button'); 
+
+let tasksData = [];
+
+addTaskButton.addEventListener('click', appendDivTask);
+addTaskButton.addEventListener('click', appendTaskToJson);
+addTaskButton.addEventListener('click', () => counter.textContent = viewSection.childElementCount);
+
+function appendDivTask() {
+    if (textInput.value === '') return;
+
+    const todoContainer = document.createElement('div')
+    todoContainer.classList.add("todo-container");
+
+    const todoPriorityContainer = document.createElement('div')
+    todoPriorityContainer.classList.add("todo-priority");
+    todoPriorityContainer.textContent = prioritySelector.value;
+    todoContainer.appendChild(todoPriorityContainer);
+
+    const todoDateContainer = document.createElement('div')
+    todoDateContainer.classList.add("todo-created-at");
+    let SqlDate = (new Date()).toLocaleString("en-GB").split(',').join(' ');
+    todoDateContainer.textContent = SqlDate;
+    todoContainer.appendChild(todoDateContainer);
+    
+    const todoInputContainer = document.createElement('div')
+    todoInputContainer.classList.add("todo-text");
+    todoInputContainer.textContent = textInput.value;
+    todoContainer.appendChild(todoInputContainer);
+    textInput.value = '';
+
+    viewSection.appendChild(todoContainer);
+}
+
+function appendTaskToJson() {
+    let lastDiv = viewSection.lastChild;
+    let taskInfo = {
+        // "id": `${tasksData.length}`,
+        "priority": `${lastDiv.querySelector(".todo-priority").textContent}`,
+        "date": `${lastDiv.querySelector(".todo-created-at").textContent}`,
+        "input": `${lastDiv.querySelector(".todo-text").textContent}`
+    };
+    tasksData.push(taskInfo);
+    console.log(tasksData);
+}
+
+
