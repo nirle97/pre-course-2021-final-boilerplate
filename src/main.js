@@ -6,13 +6,35 @@ const addTaskButton = document.querySelector('#add-button');
 const prioritySelector = document.querySelector('#priority-selector'); 
 const counter = document.querySelector('#counter'); 
 const sortButton = document.querySelector('#sort-button'); 
+const clearButton = document.getElementById("clear");
+
 
 let myTodo = [];
 
 addTaskButton.addEventListener('click', appendSkeletonDiv);
 addTaskButton.addEventListener('click', appendDataToDiv);
 addTaskButton.addEventListener('click', appendTaskToMyTodo);
+addTaskButton.addEventListener('click', appendToLocalStorage);
+addTaskButton.addEventListener('click',CounterFunction);
 sortButton.addEventListener('click', sortMyTodo);
+window.addEventListener('load', onReload);
+
+function onReload() {
+    const valuesOfLocalStorage = JSON.parse(localStorage.getItem('my-todo'));
+    for (let i = 0; i < valuesOfLocalStorage.length; i++) {
+        appendSkeletonDiv();
+        let valuesOfOBject = Object.values(valuesOfLocalStorage[i]);
+        prioritySelector.value = valuesOfOBject[0];
+        textInput.value = valuesOfOBject[2];
+        appendDataToDiv();
+    }
+    myTodo = JSON.parse(localStorage.getItem('my-todo'))
+    CounterFunction();
+}
+
+function CounterFunction() {
+    counter.textContent = viewSection.childElementCount;
+}
 
 function appendSkeletonDiv() {
     if (textInput.value === '' && localStorage.length === 0 ||
@@ -64,6 +86,9 @@ function appendTaskToMyTodo() {
     
 }
 
+function appendToLocalStorage() {
+    localStorage.setItem('my-todo', JSON.stringify(myTodo));
+}
 
 function sortMyTodo() {
     myTodo = myTodo.sort(function (a, b) {return b.priority - a.priority});
