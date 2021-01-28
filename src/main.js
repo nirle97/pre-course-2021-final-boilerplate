@@ -1,3 +1,4 @@
+// General variables defining
 const body = document.body;
 const viewSection = document.querySelector(".view-section");  
 const textInput = document.querySelector('#text-input'); 
@@ -6,72 +7,85 @@ const prioritySelector = document.querySelector('#priority-selector');
 const counter = document.querySelector('#counter'); 
 const sortButton = document.querySelector('#sort-button'); 
 
-let tasksData = [];
+let myTodo = [];
 
-addTaskButton.addEventListener('click', appendDivTask);
-addTaskButton.addEventListener('click', appendTaskToJson);
-addTaskButton.addEventListener('click', () => counter.textContent = viewSection.childElementCount);
-sortButton.addEventListener('click', sortTasksData);
+addTaskButton.addEventListener('click', appendSkeletonDiv);
+addTaskButton.addEventListener('click', appendDataToDiv);
+addTaskButton.addEventListener('click', appendTaskToMyTodo);
+sortButton.addEventListener('click', sortMyTodo);
 
-function appendDivTask() {
-    if (textInput.value === '') return;
+function appendSkeletonDiv() {
+    if (textInput.value === '' && localStorage.length === 0 ||
+    textInput.value === '' &&  localStorage.length > 0 && myTodo.length > 0) return; // doesn't work when local storage is empty
 
-    const todoContainer = document.createElement('div')
+    const todoContainer = document.createElement('div') // todo container
     todoContainer.classList.add("todo-container");
 
-    const todoPriorityContainer = document.createElement('div')
+    const todoPriorityContainer = document.createElement('div') // priority container
     todoPriorityContainer.classList.add("todo-priority");
-    todoPriorityContainer.textContent = prioritySelector.value;
     todoContainer.appendChild(todoPriorityContainer);
 
-    const todoDateContainer = document.createElement('div')
+    const todoDateContainer = document.createElement('div') // date container
     todoDateContainer.classList.add("todo-created-at");
-    let SqlDate = (new Date()).toLocaleString("en-GB").split(',').join(' ');
-    todoDateContainer.textContent = SqlDate;
     todoContainer.appendChild(todoDateContainer);
     
-    const todoInputContainer = document.createElement('div')
+    const todoInputContainer = document.createElement('div') // text container
     todoInputContainer.classList.add("todo-text");
-    todoInputContainer.textContent = textInput.value;
     todoContainer.appendChild(todoInputContainer);
-    textInput.value = '';
-
+    
     viewSection.appendChild(todoContainer);
 }
 
-function appendTaskToJson() {
+function appendDataToDiv() {
+    if (textInput.value === '' &&  localStorage.length > 0 && myTodo.length > 0) return;
+
+    let prioritiesDivs = document.querySelectorAll(".todo-priority");
+    prioritiesDivs[prioritiesDivs.length - 1].textContent = prioritySelector.value;
+
+    let datesDivs = document.querySelectorAll(".todo-created-at")
+    let getTime = new Date().getTime();
+    let SqlDate = (new Date(getTime)).toLocaleString("en-GB").split(',').join(' ');
+    datesDivs[datesDivs.length - 1].textContent = SqlDate;
+
+    let textDivs = document.querySelectorAll(".todo-text")
+    textDivs[textDivs.length - 1].textContent = textInput.value;
+
+    textInput.value = '';
+}
+
+function appendTaskToMyTodo() {
     let lastDiv = viewSection.lastChild;
     let taskInfo = {
-        // "id": `${tasksData.length}`,
         "priority": `${lastDiv.querySelector(".todo-priority").textContent}`,
         "date": `${lastDiv.querySelector(".todo-created-at").textContent}`,
         "input": `${lastDiv.querySelector(".todo-text").textContent}`
     };
-    tasksData.push(taskInfo);
-    console.log(tasksData);
+    myTodo.push(taskInfo);
+    
 }
 
-function sortTasksData() {
-    tasksData = tasksData.sort(function (a, b) {return b.priority - a.priority});
+
+function sortMyTodo() {
+    myTodo = myTodo.sort(function (a, b) {return b.priority - a.priority});
     childrenSortedList = [];
-    for (let i = 0; i < tasksData.length; i++) {
+    for (let i = 0; i < myTodo.length; i++) {
 
         const todoContainer = document.createElement('div')
         todoContainer.classList.add("todo-container");
 
         const todoPriorityContainer = document.createElement('div')
         todoPriorityContainer.classList.add("todo-priority");
-        todoPriorityContainer.textContent = tasksData[i].priority;
+        todoPriorityContainer.textContent = myTodo[i].priority;
         todoContainer.appendChild(todoPriorityContainer);
 
         const todoDateContainer = document.createElement('div')
         todoDateContainer.classList.add("todo-created-at");
-        todoDateContainer.textContent = tasksData[i].date;
+        todoDateContainer.textContent = myTodo[i].date;
         todoContainer.appendChild(todoDateContainer);
         
         const todoInputContainer = document.createElement('div')
         todoInputContainer.classList.add("todo-text");
-        todoInputContainer.textContent = tasksData[i].input;
+        todoInputContainer.textContent = myTodo[i].input;
         todoContainer.appendChild(todoInputContainer);
 
         childrenSortedList.push(todoContainer); 
