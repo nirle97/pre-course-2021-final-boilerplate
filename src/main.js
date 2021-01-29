@@ -8,7 +8,6 @@ const counter = document.querySelector('#counter');
 const sortButton = document.querySelector('#sort-button'); 
 const clearButton = document.getElementById("clear");
 
-
 let myTodo = [];
 
 addTaskButton.addEventListener('click', createSkeletonToMyTodo);
@@ -19,6 +18,9 @@ addTaskButton.addEventListener('click',CounterFunction);
 sortButton.addEventListener('click', sortMyTodo);
 clearButton.addEventListener('click', clearAll);
 window.addEventListener('load', onReload);
+// if (checkButton) {checkButton.addEventListener('click', checkTask)};
+
+
 
 function clearAll() {
     myTodo = [];
@@ -38,8 +40,8 @@ function onReload() {
         textInput.value = valuesOfMyToDoObject[2];
         appendDataToTasksDiv();
         let datesDivs = document.querySelectorAll(".todo-created-at")
-        let dateinMilliseconds = Number(valuesOfMyToDoObject[1]);
-        let sqlDate = (new Date(dateinMilliseconds)).toLocaleString("en-GB").split(',').join(' ');
+        let dateInMilliseconds = Number(valuesOfMyToDoObject[1]);
+        let sqlDate = (new Date(dateInMilliseconds)).toLocaleString("en-GB").split(',').join(' ');
         datesDivs[datesDivs.length - 1].textContent = sqlDate;
         
     }
@@ -60,16 +62,29 @@ function createSkeletonToMyTodo() {
 
     const todoPriorityContainer = document.createElement('div') // priority container
     todoPriorityContainer.classList.add("todo-priority");
-    todoContainer.appendChild(todoPriorityContainer);
 
     const todoDateContainer = document.createElement('div') // date container
     todoDateContainer.classList.add("todo-created-at");
-    todoContainer.appendChild(todoDateContainer);
     
     const todoInputContainer = document.createElement('div') // text container
     todoInputContainer.classList.add("todo-text");
-    todoContainer.appendChild(todoInputContainer);
-    
+
+    const removeButton = document.createElement('a');
+    removeButton.setAttribute("id", "remove-button");
+    removeButton.innerHTML = '<i class="fas fa-trash"></i>';
+    removeButton.addEventListener('click', removeTask);
+
+    const checkButton = document.createElement('button');
+    checkButton.setAttribute("id", "check-button");
+    checkButton.innerHTML = '<i class="fas fa-check"></i>';
+    checkButton.addEventListener('click', checkTask);
+
+    todoContainer.append(todoPriorityContainer,
+                         todoDateContainer,
+                         todoInputContainer,
+                         removeButton,
+                         checkButton);
+
     viewSection.appendChild(todoContainer);
 }
 
@@ -106,7 +121,6 @@ function appendTaskToMyTodo() {
         "text": `${lastDiv.querySelector(".todo-text").textContent}`
     };
     myTodo.push(taskInfo);
-    
 }
 
 function appendToLocalStorage() {
@@ -114,35 +128,31 @@ function appendToLocalStorage() {
 }
 
 function sortMyTodo() {
+    const taskDiv = Array.prototype.slice.call(document.querySelectorAll('.todo-container'));
+    let i = 0;
+    while (i < taskDiv.length - 1) {
+        if (taskDiv[i].firstChild.textContent < taskDiv[i + 1].firstChild.textContent) { 
+            taskDiv[i].before(taskDiv[i + 1]);
+            temp = taskDiv[i] 
+            taskDiv[i] = taskDiv[i + 1] 
+            taskDiv[i+ 1] = temp 
+            i = -1;
+        } 
+        i++;
+    };
     myTodo = myTodo.sort(function (a, b) {return b.priority - a.priority});
-    childrenSortedList = [];
-    for (let i = 0; i < myTodo.length; i++) {
+    localStorage.setItem('my-todo', JSON.stringify(myTodo));
+};
 
-        const todoContainer = document.createElement('div')
-        todoContainer.classList.add("todo-container");
+function removeTask(e) {
+    let task = e.target.parentNode;
+    const confirmMessage = confirm("Hey Champ! are you sure you want to delete the task?");
+    if (confirmMessage) task.classList.toggle("remove-task");
+    
 
-        const todoPriorityContainer = document.createElement('div')
-        todoPriorityContainer.classList.add("todo-priority");
-        todoPriorityContainer.textContent = myTodo[i].priority;
-        todoContainer.appendChild(todoPriorityContainer);
+};
 
-        const todoDateContainer = document.createElement('div')
-        todoDateContainer.classList.add("todo-created-at");
-        todoDateContainer.textContent = myTodo[i].date;
-        todoContainer.appendChild(todoDateContainer);
-        
-        const todoInputContainer = document.createElement('div')
-        todoInputContainer.classList.add("todo-text");
-        todoInputContainer.textContent = myTodo[i].text;
-        todoContainer.appendChild(todoInputContainer);
-
-        childrenSortedList.push(todoContainer); 
-
-    }
-    textInput.value = '';
-    viewSection.textContent = '';
-    for (div of childrenSortedList) {
-        viewSection.appendChild(div);
-    }
+function checkTask(e) {
+    let task = e.target.parentNode;
+    task.classList.toggle("check-task");
 }
-
