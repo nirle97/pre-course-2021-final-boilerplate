@@ -2,6 +2,7 @@ body {
   background-image: linear-gradient(75deg, #f3b8b8, #966dc2);
   background-attachment: fixed;
   position: relative;
+  margin: 0;
 }
 
 .doit-logo {
@@ -26,27 +27,30 @@ body {
   margin: 0 auto;
   width: 900px;
   height: 70px;
+  border-radius: 9px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 10px white;
 }
-
 #text-input {
-  border: none;
+  border-color: transparent;
+  border-radius: 9px;
   font-size: 2rem;
   width: 50%;
-  height: 90%;
+  height: 92%;
   outline: 0;
   padding-left: 25px;
   font-family: "Montserrat", sans-serif;
-  font-weight: 600;
+  font-weight: 400;
 }
+
 .priority-label {
   height: 90%;
   font-size: 1.5rem;
   padding-right: 4px;
   font-family: "Montserrat", sans-serif;
   opacity: 0.3;
-  pointer-events: none;
 }
-select {
+#priority-selector {
   height: 60%;
   cursor: pointer;
 }
@@ -57,9 +61,7 @@ select {
   padding-right: 4px;
   font-family: "Montserrat", sans-serif;
   opacity: 0.3;
-  pointer-events: none;
   padding: 0 5px 0 35px;
-  pointer-events: none;
 }
 #add-button {
   cursor: pointer;
@@ -81,10 +83,119 @@ i {
   display: none;
 }
 
+label.task-titles {
+  display: none;
+  font-size: 1.8rem;
+  font-family: "Montserrat", sans-serif;
+  opacity: 0.6;
+  margin-left: 14%;
+  margin-top: 30px;
+}
+label.task-titles-display-on {
+  display: inline-block;
+}
+
+span.task-title {
+  margin: 0 350px 0 20px;
+}
+span.date-time-title {
+  word-spacing: 5px;
+  margin-left: 30px;
+}
+
+.view-section {
+  display: block;
+  margin: 0 30px 0 30px;
+  padding: 0;
+}
+
+.todo-container {
+  display: block;
+  background-color: white;
+  width: 900px;
+  height: 40px;
+  margin: 0 auto;
+  padding: 10px 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  overflow: none;
+  border-radius: 9px;
+  border-bottom: 1px grey solid;
+  box-shadow: 0 0 5px white;
+}
+
 .check-task {
   text-decoration: line-through;
 }
 
+div.todo-priority,
+div.todo-created-at,
+div.todo-text {
+  padding: 0 40px;
+  margin-top: 20px;
+}
+.div.todo-text {
+  padding: 0;
+}
+#remove-button {
+  position: absolute;
+  right: 20%;
+}
+#remove-button:hover {
+  color: salmon;
+}
+#check-button {
+  position: absolute;
+  right: 16%;
+}
+#check-button:hover {
+  color: green;
+}
+
 .remove-task {
   display: none;
+}
+
+/* .buttom-section {
+  display: block;
+  background-color: white;
+  width: 900px;
+  height: 30px;
+  margin: 0 auto;
+  padding: 10px 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  overflow: none;
+  border-radius: 9px;
+  border-bottom: 1px grey solid;
+  box-shadow: 0 0 5px white;
+} */
+
+.counter-label {
+  display: inline;
+  margin-left: 30%;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+}
+#counter {
+  display: inline;
+  margin: 0 auto;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+}
+#sort-button {
+  display: inline;
+  margin: 0 auto;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+}
+#clear {
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
+  color: dodgerblue;
+  font-weight: 700;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
 }

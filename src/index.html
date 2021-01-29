@@ -20,9 +20,9 @@
     </header>
     <section>
       <form class="control-section">
-        <input type="text" name="task" id="text-input" placeholder="Let's Do it !">
+        <input type="text" name="task" id="text-input" placeholder="Let's Do it !" maxlength="30">
         <label for="priority" class="priority-label">Priority</label>
-        <select name="priority" id="priority-selector">
+        <select name="priority" id="priority-selector"><i class="far fa-arrow-alt-circle-down"></i>
           <option value="" disabled selected>Is It Important?</option>
           <optgroup label='Not Important'>
             <option value="1">1</option>
@@ -43,13 +43,18 @@
       </form>
     </section>
     <section>
+      <label class="task-titles">Priority <span class="date-time-title">Date & Time</span><span class="task-title">Task</span> Functions</label>
       <ul class="view-section">
       </ul>
-      <div id="counter"></div>
-      <button id="sort-button">Sort Tasks By Priority</button>
-      <button id="clear">All Done!</button>
+    </section>
+    <section>
+      <div class="buttom-section">
+        <label class="counter-label">Total tasks you have left is: </label>
+        <div id="counter"></div>
+        <a id="sort-button">Sort Tasks By Priority</a>
+        <a id="clear">All Done!</a>
+      </div>
     </section>
     <script src="./main.js"></script>
   </body>
-  
 </html>
