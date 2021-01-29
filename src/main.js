@@ -1,14 +1,16 @@
 // General variables defining
 const body = document.body;
 const viewSection = document.querySelector(".view-section");  
+const controlSection = document.querySelector(".control-section");  
 const textInput = document.querySelector('#text-input'); 
 const addTaskButton = document.querySelector('#add-button'); 
 const prioritySelector = document.querySelector('#priority-selector'); 
 const counter = document.querySelector('#counter'); 
 const sortButton = document.querySelector('#sort-button'); 
 const clearButton = document.getElementById("clear");
+const select = document.getElementById("priority-selector");
 
-let myTodo = [];
+
 
 addTaskButton.addEventListener('click', createSkeletonToMyTodo);
 addTaskButton.addEventListener('click', appendDataToTasksDiv);
@@ -18,9 +20,8 @@ addTaskButton.addEventListener('click',CounterFunction);
 sortButton.addEventListener('click', sortMyTodo);
 clearButton.addEventListener('click', clearAll);
 window.addEventListener('load', onReload);
-// if (checkButton) {checkButton.addEventListener('click', checkTask)};
 
-
+let myTodo = [];
 
 function clearAll() {
     myTodo = [];
@@ -91,13 +92,15 @@ function createSkeletonToMyTodo() {
 function appendDataToTasksDiv() {
     if (textInput.value === '' &&  localStorage.length > 0 && myTodo.length > 0) return;
 
+    if (prioritySelector.value === '') prioritySelector.value = 1;
+
     let prioritiesDivs = document.querySelectorAll(".todo-priority");
     prioritiesDivs[prioritiesDivs.length - 1].textContent = prioritySelector.value;
     
     let textDivs = document.querySelectorAll(".todo-text")
     textDivs[textDivs.length - 1].textContent = textInput.value;
-    
     textInput.value = '';
+    controlSection.reset();
 
     if ((localStorage.length === 0 && myTodo.length === 0)
         || (localStorage.length > 0 && myTodo.length > 0)) {
@@ -156,3 +159,4 @@ function checkTask(e) {
     let task = e.target.parentNode;
     task.classList.toggle("check-task");
 }
+    
