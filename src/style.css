@@ -1,7 +1,3 @@
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   background-image: linear-gradient(75deg, #f3b8b8, #966dc2);
   background-attachment: fixed;
@@ -12,27 +8,62 @@ body {
 #welcome-page {
   position: relative;
   display: block;
-  height: 100vh;
-  width: 100vw;
+  right: 0;
+  height: 90vh;
+  width: 95vw;
+  background-color: white;
+  z-index: -2;
 }
 #welcome-video {
-  position: absolute;
+  position: relative;
+  display: block;
   right: 0;
-  bottom: 0;
-  max-width: 100vw;
-  max-height: 100vh;
-  width: 94%;
-  height: 100%;
+  margin: 0;
+  width: 110%;
+  height: 115%;
   background-size: cover;
-  overflow: hidden;
   object-fit: fill;
-  margin-right: 30px;
-  background-color: rgb(255, 255, 255);
   z-index: -1;
+  box-shadow: 0 0 60px white;
+}
+
+.welcome-title {
+  font-family: "Montserrat", sans-serif;
+  position: absolute;
+  right: 0%;
+  color: black;
+  display: inline;
+}
+
+.scroll-button {
+  display: block;
+  text-decoration: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10rem;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 0.15rem;
+  transition: all 0.3s;
+  position: absolute;
+  overflow: hidden;
+  z-index: 1;
+  background-color: #f3b8b8;
+  right: 14%;
+  top: 50%;
+}
+
+#welcome-logo {
+  display: block;
+  pointer-events: none;
+  position: absolute;
+  right: 2%;
+  top: 10%;
 }
 
 .doit-logo {
   user-select: none;
+  margin-top: 150px;
 }
 
 .doit-logo img {

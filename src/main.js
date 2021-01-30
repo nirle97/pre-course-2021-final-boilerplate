@@ -12,6 +12,7 @@ const sortButton = document.querySelector('#sort-button');
 const clearButton = document.getElementById("clear");
 const select = document.getElementById("priority-selector");
 const tasksTitles = document.querySelector(".task-titles")
+
 const url = 'https://api.jsonbin.io/v3/b/601308a5b41a937c6d536c6f';
 const XmasterKey = "$2b$10$G3u8we1g.QbRfXsTOlEDiOFzRlmSXqbljvIljPRyQEe0uvwz8qX1K";
 async function getPersistent() {
@@ -30,26 +31,6 @@ async function getPersistent() {
         console.log(myToDo);
     } 
 };
-
-getPersistent();
-// All the events handlers 
-scrollButton = addEventListener('click', smoothScroll)
-addTaskButton.addEventListener('click', createSkeletonTomyToDo);
-addTaskButton.addEventListener('click', appendDataToTasksDiv);
-addTaskButton.addEventListener('click', appendTaskTomyToDo);
-addTaskButton.addEventListener('click', appendToLocalStorage);
-addTaskButton.addEventListener('click',CounterFunction);
-sortButton.addEventListener('click', sortmyToDo);
-clearButton.addEventListener('click', clearAll);
-window.addEventListener('load', onReload);
-
-function smoothScroll(e) {
-
-}
-// JSON file storing the tasks data 
-let myToDo = [];
-
-
 async function setPersistent() {
     const options = { 
         method: "PUT",
@@ -62,7 +43,19 @@ async function setPersistent() {
     }
     const response = await fetch(url, options)
 };
+// getPersistent();
+// All the events handlers 
+addTaskButton.addEventListener('click', createSkeletonTomyToDo);
+addTaskButton.addEventListener('click', appendDataToTasksDiv);
+addTaskButton.addEventListener('click', appendTaskTomyToDo);
+addTaskButton.addEventListener('click', appendToLocalStorage);
+addTaskButton.addEventListener('click',CounterFunction);
+sortButton.addEventListener('click', sortmyToDo);
+clearButton.addEventListener('click', clearAll);
+window.addEventListener('load', onReload);
 
+// JSON file storing the tasks data 
+let myToDo = [];
 
 // EventListener of addTaskButton.
 // On page reloading all the data is retrieved from the local storage.
@@ -72,7 +65,7 @@ function onReload() {
     if (localStorage.length < 1) return;
     
     // objectsofmyToDo = getPersistent();
-    objectsofmyToDo = myToDo;
+    objectsofmyToDo = JSON.parse(localStorage.getItem('my-todo'));
     for (let i = 0; i < objectsofmyToDo.length; i++) {
         createSkeletonTomyToDo();
         let valuesOfmyToDoObject = Object.values(objectsofmyToDo[i]);
@@ -175,7 +168,7 @@ function appendTaskTomyToDo() {
         "text": `${lastDiv.querySelector(".todo-text").textContent}`
     };
     myToDo.push(taskInfo);
-    setPersistent();
+    // setPersistent();
 }
 
 // EventListener of addTaskButton.
@@ -219,7 +212,7 @@ function removeTask(e) {
                 myToDo.splice(indexCounter, 1);
                 if (myToDo.length > 0) {
                     localStorage.setItem('my-todo', JSON.stringify(myToDo));
-                    setPersistent();
+                    // setPersistent();
                 } else {
                     localStorage.clear();
                     // setPersistent();
@@ -250,10 +243,3 @@ function checkTask(e) {
     let task = e.target.parentNode;
     task.classList.toggle("check-task");
 }
-
-
-// let response = await fetch('https://api.jsonbin.io/v3/b/6011936f3126bb747e9fd00f/latest%27);
-//     let jsonResponse = await response.json(); 
-//     let recordResponse = jsonResponse["record"];
-//     tasks = recordResponse["my-todo"];
-// await fetch(URL,{method:"put",headers: {"Content-Type": "application/json",},body: JSON.stringify({"my-todo":tasks});
