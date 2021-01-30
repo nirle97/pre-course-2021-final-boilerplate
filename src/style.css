@@ -84,19 +84,15 @@ i {
 }
 
 label.task-titles {
-  display: none;
   font-size: 1.8rem;
   font-family: "Montserrat", sans-serif;
   opacity: 0.6;
   margin-left: 14%;
   margin-top: 30px;
 }
-label.task-titles-display-on {
-  display: inline-block;
-}
 
 span.task-title {
-  margin: 0 350px 0 20px;
+  margin: 0 350px 0 45px;
 }
 span.date-time-title {
   word-spacing: 5px;
@@ -149,31 +145,15 @@ div.todo-text {
   right: 16%;
 }
 #check-button:hover {
-  color: green;
+  color: rgb(11, 194, 11);
 }
 
 .remove-task {
   display: none;
 }
-
-/* .buttom-section {
-  display: block;
-  background-color: white;
-  width: 900px;
-  height: 30px;
-  margin: 0 auto;
-  padding: 10px 0;
-  font-family: "Montserrat", sans-serif;
-  font-size: 1.2rem;
-  overflow: none;
-  border-radius: 9px;
-  border-bottom: 1px grey solid;
-  box-shadow: 0 0 5px white;
-} */
-
 .counter-label {
   display: inline;
-  margin-left: 30%;
+  margin-left: 40%;
   font-family: "Montserrat", sans-serif;
   font-size: 1.2rem;
 }
@@ -183,15 +163,23 @@ div.todo-text {
   font-family: "Montserrat", sans-serif;
   font-size: 1.2rem;
 }
+.clear-sort-div {
+  display: block;
+  margin-top: 30px;
+}
 #sort-button {
   display: inline;
   margin: 0 auto;
   cursor: pointer;
   font-family: "Montserrat", sans-serif;
   font-size: 1.2rem;
+  margin-left: 33%;
+  margin-right: 5%;
+  color: rgb(1, 212, 1);
+  font-weight: 700;
 }
 #clear {
-  display: block;
+  display: inline;
   margin: 0 auto;
   cursor: pointer;
   color: dodgerblue;
