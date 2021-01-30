@@ -1,5 +1,6 @@
 // General variables defining
 const body = document.body;
+let scrollButton = document.querySelector("#welcome-page")
 const viewSection = document.querySelector(".view-section");  
 const controlSection = document.querySelector(".control-section");  
 const textInput = document.querySelector('#text-input'); 
@@ -11,8 +12,28 @@ const sortButton = document.querySelector('#sort-button');
 const clearButton = document.getElementById("clear");
 const select = document.getElementById("priority-selector");
 const tasksTitles = document.querySelector(".task-titles")
+const url = 'https://api.jsonbin.io/v3/b/601308a5b41a937c6d536c6f';
+const XmasterKey = "$2b$10$G3u8we1g.QbRfXsTOlEDiOFzRlmSXqbljvIljPRyQEe0uvwz8qX1K";
+async function getPersistent() {
+    let options = { 
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": XmasterKey,
+        },
+    };
+    const response = await fetch (url + '/latest', options);
+    if (response.ok) {
+        let responseJSON = await response.json();
+        let responseRecord = responseJSON["record"];
+        myToDo = responseRecord["my-todo"];
+        console.log(myToDo);
+    } 
+};
 
+getPersistent();
 // All the events handlers 
+scrollButton = addEventListener('click', smoothScroll)
 addTaskButton.addEventListener('click', createSkeletonTomyToDo);
 addTaskButton.addEventListener('click', appendDataToTasksDiv);
 addTaskButton.addEventListener('click', appendTaskTomyToDo);
@@ -22,8 +43,26 @@ sortButton.addEventListener('click', sortmyToDo);
 clearButton.addEventListener('click', clearAll);
 window.addEventListener('load', onReload);
 
+function smoothScroll(e) {
+
+}
 // JSON file storing the tasks data 
 let myToDo = [];
+
+
+async function setPersistent() {
+    const options = { 
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": XmasterKey,
+            "X-Bin-Versioning": false,
+        },
+        body: JSON.stringify({"my-todo": myToDo})
+    }
+    const response = await fetch(url, options)
+};
+
 
 // EventListener of addTaskButton.
 // On page reloading all the data is retrieved from the local storage.
@@ -31,7 +70,9 @@ let myToDo = [];
 // The objects from the local storage are being appended to the <div>s.
 function onReload() {
     if (localStorage.length < 1) return;
-    objectsofmyToDo = JSON.parse(localStorage.getItem('my-todo'));
+    
+    // objectsofmyToDo = getPersistent();
+    objectsofmyToDo = myToDo;
     for (let i = 0; i < objectsofmyToDo.length; i++) {
         createSkeletonTomyToDo();
         let valuesOfmyToDoObject = Object.values(objectsofmyToDo[i]);
@@ -134,6 +175,7 @@ function appendTaskTomyToDo() {
         "text": `${lastDiv.querySelector(".todo-text").textContent}`
     };
     myToDo.push(taskInfo);
+    setPersistent();
 }
 
 // EventListener of addTaskButton.
@@ -160,6 +202,7 @@ function sortmyToDo() {
     };
     myToDo = myToDo.sort(function (a, b) {return b.priority - a.priority});
     localStorage.setItem('my-todo', JSON.stringify(myToDo));
+    // setPersistent();
 };
 
 // EventListener of sortButton.
@@ -176,8 +219,10 @@ function removeTask(e) {
                 myToDo.splice(indexCounter, 1);
                 if (myToDo.length > 0) {
                     localStorage.setItem('my-todo', JSON.stringify(myToDo));
+                    setPersistent();
                 } else {
                     localStorage.clear();
+                    // setPersistent();
                     tasksTitles.style.display = 'none';
                 };
             };
@@ -192,7 +237,8 @@ function removeTask(e) {
 function clearAll() {
     viewSection.textContent = '';
     myToDo = [];
-    setJsonBin();
+    // setPersistent();
+    localStorage.clear()
     CounterFunction();
     controlSection.reset();
     tasksTitles.style.display = 'none';
@@ -204,41 +250,6 @@ function checkTask(e) {
     let task = e.target.parentNode;
     task.classList.toggle("check-task");
 }
-
-const url = 'https://api.jsonbin.io/v3/b/601308a5b41a937c6d536c6f';
-const XmasterKey = "$2b$10$G3u8we1g.QbRfXsTOlEDiOFzRlmSXqbljvIljPRyQEe0uvwz8qX1K";
-
-async function setJsonBin() {
-    const options = { 
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": XmasterKey,
-            "X-Bin-Versioning": false,
-        },
-        body: JSON.stringify(myToDo)
-    }
-    console.log(JSON.stringify(myToDo));
-    const response = await fetch(url, options)
-};
-
-async function getJsonBin() {
-    let options = { 
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": XmasterKey,
-        },
-    };
-    const response = await fetch (url + '/latest', options);
-    if (response.ok) {
-        let responseJSON = await response.json();
-        let responseRecord = responseJSON["record"];
-        myToDo = responseRecord
-        console.log(myToDo);
-    }
-    
-};
 
 
 // let response = await fetch('https://api.jsonbin.io/v3/b/6011936f3126bb747e9fd00f/latest%27);
