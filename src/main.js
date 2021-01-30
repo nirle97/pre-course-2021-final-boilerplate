@@ -13,38 +13,38 @@ const select = document.getElementById("priority-selector");
 const tasksTitles = document.querySelector(".task-titles")
 
 // All the events handlers 
-addTaskButton.addEventListener('click', createSkeletonToMyTodo);
+addTaskButton.addEventListener('click', createSkeletonTomyToDo);
 addTaskButton.addEventListener('click', appendDataToTasksDiv);
-addTaskButton.addEventListener('click', appendTaskToMyTodo);
+addTaskButton.addEventListener('click', appendTaskTomyToDo);
 addTaskButton.addEventListener('click', appendToLocalStorage);
 addTaskButton.addEventListener('click',CounterFunction);
-sortButton.addEventListener('click', sortMyTodo);
+sortButton.addEventListener('click', sortmyToDo);
 clearButton.addEventListener('click', clearAll);
 window.addEventListener('load', onReload);
 
 // JSON file storing the tasks data 
-let myTodo = [];
+let myToDo = [];
 
 // EventListener of addTaskButton.
 // On page reloading all the data is retrieved from the local storage.
 // New Dom tree is being built with a division into <div> tags.
 // The objects from the local storage are being appended to the <div>s.
 function onReload() {
-    CounterFunction()
     if (localStorage.length < 1) return;
-    myToDO = JSON.parse(localStorage.getItem('my-todo'));
-    for (let i = 0; i < myToDO.length; i++) {
-        createSkeletonToMyTodo();
-        let valuesOfMyToDoObject = Object.values(myToDO[i]);
-        prioritySelector.value = valuesOfMyToDoObject[0];
-        textInput.value = valuesOfMyToDoObject[2];
+    objectsofmyToDo = JSON.parse(localStorage.getItem('my-todo'));
+    for (let i = 0; i < objectsofmyToDo.length; i++) {
+        createSkeletonTomyToDo();
+        let valuesOfmyToDoObject = Object.values(objectsofmyToDo[i]);
+        prioritySelector.value = valuesOfmyToDoObject[0];
+        textInput.value = valuesOfmyToDoObject[2];
         appendDataToTasksDiv();
         let datesDivs = document.querySelectorAll(".todo-created-at")
-        let dateInMilliseconds = Number(valuesOfMyToDoObject[1]);
+        let dateInMilliseconds = Number(valuesOfmyToDoObject[1]);
         let sqlDate = (new Date(dateInMilliseconds)).toLocaleString("en-GB").split(',').join(' ');
         datesDivs[datesDivs.length - 1].textContent = sqlDate;
     }
-    myTodo = JSON.parse(localStorage.getItem('my-todo'))
+    myToDo = JSON.parse(localStorage.getItem('my-todo'))
+    CounterFunction()
 }
 
 // Counts how many children the view-section has.
@@ -52,7 +52,7 @@ function onReload() {
 function CounterFunction() {
     counter.textContent = viewSection.childElementCount;
     if (counter.textContent === '0') {
-        counterLabel.textContent = "You have done it all!";
+        counterLabel.textContent = "You made all the tasks!";
         counter.textContent = "";
         return;
     } counterLabel.textContent = 'Total tasks you have left is:';
@@ -60,9 +60,9 @@ function CounterFunction() {
 
 // EventListener of addTaskButton.
 // Function to build the DOM tree divided into div tags. 
-function createSkeletonToMyTodo() {
+function createSkeletonTomyToDo() {
     if (textInput.value === '' && localStorage.length === 0 ||
-    textInput.value === '' &&  localStorage.length > 0 && myTodo.length > 0) return; // doesn't work when local storage is empty
+    textInput.value === '' &&  localStorage.length > 0 && myToDo.length > 0) return; // doesn't work when local storage is empty
 
     const todoContainer = document.createElement('div'); // main task container
     todoContainer.classList.add("todo-container");
@@ -97,19 +97,20 @@ function createSkeletonToMyTodo() {
 
 // EventListener of addTaskButton.
 // On each click on the "add button" - the priority, date and the task's name are being wrapped inside divs.
-// All the divs were created in the "createSkeletonToMyTodo" function.
+// All the divs were created in the "createSkeletonTomyToDo" function.
 function appendDataToTasksDiv() {
-    if (textInput.value === '' &&  localStorage.length > 0 && myTodo.length > 0) return;
+    if (textInput.value === '' &&  localStorage.length > 0 && myToDo.length > 0) return;
     if (textInput.value !== '' && prioritySelector.value === '') prioritySelector.value = 1;
     let prioritiesDivs = document.querySelectorAll(".todo-priority");
+
     prioritiesDivs[prioritiesDivs.length - 1].textContent = prioritySelector.value;
     let textDivs = document.querySelectorAll(".todo-text")
     textDivs[textDivs.length - 1].textContent = textInput.value;
     controlSection.reset();
     tasksTitles.style.display = 'inline-block';
     
-    if ((localStorage.length === 0 && myTodo.length === 0)
-        || (localStorage.length > 0 && myTodo.length > 0)) {
+    if ((localStorage.length === 0 && myToDo.length === 0)
+        || (localStorage.length > 0 && myToDo.length > 0)) {
     let datesDivs = document.querySelectorAll(".todo-created-at")
     let taskDate = new Date();
     let dateForUser = taskDate.toLocaleString("en-GB");
@@ -120,31 +121,31 @@ function appendDataToTasksDiv() {
 // EventListener of addTaskButton.
 // push the task's data into the myToDo JSON object.
 // the date is converted to milliseconds.
-function appendTaskToMyTodo() {
+function appendTaskTomyToDo() {
     let lastDiv = viewSection.lastChild;
         const dateForUser = (lastDiv.querySelector(".todo-created-at").textContent);
         const [first, second] = dateForUser.split(',').map(item => item.trim());
         const [day, month, year] = first.split('/');
         const [hours, minutes, seconds] = second.split(':');
-        const dateForMyToDo = new Date(year, month - 1, day, hours, minutes, seconds);
+        const dateFormyToDo = new Date(year, month - 1, day, hours, minutes, seconds);
     let taskInfo = {
         "priority": `${lastDiv.querySelector(".todo-priority").textContent}`,
-        "date": `${dateForMyToDo.getTime()}`,
+        "date": `${dateFormyToDo.getTime()}`,
         "text": `${lastDiv.querySelector(".todo-text").textContent}`
     };
-    myTodo.push(taskInfo);
+    myToDo.push(taskInfo);
 }
 
 // EventListener of addTaskButton.
-// Save myToDO in the local storage
+// Save myToDo in the local storage
 function appendToLocalStorage() {
-    localStorage.setItem('my-todo', JSON.stringify(myTodo));
+    localStorage.setItem('my-todo', JSON.stringify(myToDo));
 }
 
 // EventListener of sortButton.
 // looping through all the task's main div (class="todo-container") and change the siblings order in the DOM tree.
 // assign myToDo with the sorted values and set it in the local storage.
-function sortMyTodo() {
+function sortmyToDo() {
     const taskDiv = Array.prototype.slice.call(document.querySelectorAll('.todo-container'));
     let i = 0;
     while (i < taskDiv.length - 1) {
@@ -157,8 +158,8 @@ function sortMyTodo() {
         } 
         i++;
     };
-    myTodo = myTodo.sort(function (a, b) {return b.priority - a.priority});
-    localStorage.setItem('my-todo', JSON.stringify(myTodo));
+    myToDo = myToDo.sort(function (a, b) {return b.priority - a.priority});
+    localStorage.setItem('my-todo', JSON.stringify(myToDo));
 };
 
 // EventListener of sortButton.
@@ -170,11 +171,11 @@ function removeTask(e) {
         targetTask.remove()
         const taskText = targetTask.querySelector(".todo-text").textContent;
         let indexCounter = 0;
-        for (task of myTodo) {
+        for (task of myToDo) {
             if (task.text === taskText) {
-                myTodo.splice(indexCounter, 1);
-                if (myTodo.length > 0) {
-                    localStorage.setItem('my-todo', JSON.stringify(myTodo));
+                myToDo.splice(indexCounter, 1);
+                if (myToDo.length > 0) {
+                    localStorage.setItem('my-todo', JSON.stringify(myToDo));
                 } else {
                     localStorage.clear();
                     tasksTitles.style.display = 'none';
@@ -189,9 +190,9 @@ function removeTask(e) {
 // EventListener of clearButton.
 // clear the local storage and all the viewSection content.
 function clearAll() {
-    myTodo = [];
     viewSection.textContent = '';
-    localStorage.clear();
+    myToDo = [];
+    setJsonBin();
     CounterFunction();
     controlSection.reset();
     tasksTitles.style.display = 'none';
@@ -203,4 +204,45 @@ function checkTask(e) {
     let task = e.target.parentNode;
     task.classList.toggle("check-task");
 }
+
+const url = 'https://api.jsonbin.io/v3/b/601308a5b41a937c6d536c6f';
+const XmasterKey = "$2b$10$G3u8we1g.QbRfXsTOlEDiOFzRlmSXqbljvIljPRyQEe0uvwz8qX1K";
+
+async function setJsonBin() {
+    const options = { 
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": XmasterKey,
+            "X-Bin-Versioning": false,
+        },
+        body: JSON.stringify(myToDo)
+    }
+    console.log(JSON.stringify(myToDo));
+    const response = await fetch(url, options)
+};
+
+async function getJsonBin() {
+    let options = { 
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": XmasterKey,
+        },
+    };
+    const response = await fetch (url + '/latest', options);
+    if (response.ok) {
+        let responseJSON = await response.json();
+        let responseRecord = responseJSON["record"];
+        myToDo = responseRecord
+        console.log(myToDo);
+    }
     
+};
+
+
+// let response = await fetch('https://api.jsonbin.io/v3/b/6011936f3126bb747e9fd00f/latest%27);
+//     let jsonResponse = await response.json(); 
+//     let recordResponse = jsonResponse["record"];
+//     tasks = recordResponse["my-todo"];
+// await fetch(URL,{method:"put",headers: {"Content-Type": "application/json",},body: JSON.stringify({"my-todo":tasks});
