@@ -13,37 +13,10 @@ const clearButton = document.getElementById("clear");
 const select = document.getElementById("priority-selector");
 const tasksTitles = document.querySelector(".task-titles")
 
-const url = 'https://api.jsonbin.io/v3/b/601308a5b41a937c6d536c6f';
-const XmasterKey = "$2b$10$G3u8we1g.QbRfXsTOlEDiOFzRlmSXqbljvIljPRyQEe0uvwz8qX1K";
-async function getPersistent() {
-    let options = { 
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": XmasterKey,
-        },
-    };
-    const response = await fetch (url + '/latest', options);
-    if (response.ok) {
-        let responseJSON = await response.json();
-        let responseRecord = responseJSON["record"];
-        myToDo = responseRecord["my-todo"];
-        console.log(myToDo);
-    } 
-};
-async function setPersistent() {
-    const options = { 
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": XmasterKey,
-            "X-Bin-Versioning": false,
-        },
-        body: JSON.stringify({"my-todo": myToDo})
-    }
-    const response = await fetch(url, options)
-};
-// getPersistent();
+// JSON file storing the tasks data 
+let myToDo = [];
+
+// getPersistent()
 // All the events handlers 
 addTaskButton.addEventListener('click', createSkeletonTomyToDo);
 addTaskButton.addEventListener('click', appendDataToTasksDiv);
@@ -54,24 +27,25 @@ sortButton.addEventListener('click', sortmyToDo);
 clearButton.addEventListener('click', clearAll);
 window.addEventListener('load', onReload);
 
-// JSON file storing the tasks data 
-let myToDo = [];
-
 // EventListener of addTaskButton.
-// On page reloading all the data is retrieved from the local storage.
+// On page reloading all the data is retrieved from the local storage / jsonbin.
 // New Dom tree is being built with a division into <div> tags.
-// The objects from the local storage are being appended to the <div>s.
+// The objects from the local storage / jsonbin are being appended to the <div>s.
 function onReload() {
-    if (localStorage.length < 1) return;
-    
-    // objectsofmyToDo = getPersistent();
+    // await getPersistent();
+
+    if (localStorage.length === 0) return;
     objectsofmyToDo = JSON.parse(localStorage.getItem('my-todo'));
+    
     for (let i = 0; i < objectsofmyToDo.length; i++) {
         createSkeletonTomyToDo();
+
         let valuesOfmyToDoObject = Object.values(objectsofmyToDo[i]);
         prioritySelector.value = valuesOfmyToDoObject[0];
         textInput.value = valuesOfmyToDoObject[2];
+
         appendDataToTasksDiv();
+
         let datesDivs = document.querySelectorAll(".todo-created-at")
         let dateInMilliseconds = Number(valuesOfmyToDoObject[1]);
         let sqlDate = (new Date(dateInMilliseconds)).toLocaleString("en-GB").split(',').join(' ');
@@ -95,8 +69,6 @@ function CounterFunction() {
 // EventListener of addTaskButton.
 // Function to build the DOM tree divided into div tags. 
 function createSkeletonTomyToDo() {
-    if (textInput.value === '' && localStorage.length === 0 ||
-    textInput.value === '' &&  localStorage.length > 0 && myToDo.length > 0) return; // doesn't work when local storage is empty
 
     const todoContainer = document.createElement('div'); // main task container
     todoContainer.classList.add("todo-container");
@@ -133,24 +105,24 @@ function createSkeletonTomyToDo() {
 // On each click on the "add button" - the priority, date and the task's name are being wrapped inside divs.
 // All the divs were created in the "createSkeletonTomyToDo" function.
 function appendDataToTasksDiv() {
-    if (textInput.value === '' &&  localStorage.length > 0 && myToDo.length > 0) return;
-    if (textInput.value !== '' && prioritySelector.value === '') prioritySelector.value = 1;
-    let prioritiesDivs = document.querySelectorAll(".todo-priority");
+    if (textInput.value === '' && localStorage.length > 0 && myToDo.length === 0) return;
+    if (textInput.value !== '' && prioritySelector.value === '') prioritySelector.value = 1; //set default priority to 1
 
+    let prioritiesDivs = document.querySelectorAll(".todo-priority");
     prioritiesDivs[prioritiesDivs.length - 1].textContent = prioritySelector.value;
+
     let textDivs = document.querySelectorAll(".todo-text")
     textDivs[textDivs.length - 1].textContent = textInput.value;
-    controlSection.reset();
-    tasksTitles.style.display = 'inline-block';
+
     
-    if ((localStorage.length === 0 && myToDo.length === 0)
-        || (localStorage.length > 0 && myToDo.length > 0)) {
     let datesDivs = document.querySelectorAll(".todo-created-at")
     let taskDate = new Date();
     let dateForUser = taskDate.toLocaleString("en-GB");
     datesDivs[datesDivs.length - 1].textContent = dateForUser;
-    };
-}
+    
+    controlSection.reset(); //clean the input and priority boxes
+    tasksTitles.style.display = 'inline-block'; //hide the task's titles
+};
 
 // EventListener of addTaskButton.
 // push the task's data into the myToDo JSON object.
@@ -161,15 +133,15 @@ function appendTaskTomyToDo() {
         const [first, second] = dateForUser.split(',').map(item => item.trim());
         const [day, month, year] = first.split('/');
         const [hours, minutes, seconds] = second.split(':');
-        const dateFormyToDo = new Date(year, month - 1, day, hours, minutes, seconds);
+        const dateFormyToDo = new Date(year, month - 1, day, hours, minutes, seconds); 
     let taskInfo = {
         "priority": `${lastDiv.querySelector(".todo-priority").textContent}`,
-        "date": `${dateFormyToDo.getTime()}`,
+        "date": `${dateFormyToDo.getTime()}`, //convert date to milliseconds
         "text": `${lastDiv.querySelector(".todo-text").textContent}`
     };
     myToDo.push(taskInfo);
     // setPersistent();
-}
+}   
 
 // EventListener of addTaskButton.
 // Save myToDo in the local storage
@@ -179,7 +151,7 @@ function appendToLocalStorage() {
 
 // EventListener of sortButton.
 // looping through all the task's main div (class="todo-container") and change the siblings order in the DOM tree.
-// assign myToDo with the sorted values and set it in the local storage.
+// assign myToDo with the sorted values and set it in the local storage / jsonbin.
 function sortmyToDo() {
     const taskDiv = Array.prototype.slice.call(document.querySelectorAll('.todo-container'));
     let i = 0;
@@ -199,7 +171,7 @@ function sortmyToDo() {
 };
 
 // EventListener of sortButton.
-// remove a task from the DOM tree, from the myToDo object and from the local storage.
+// remove a task from the DOM tree, from the myToDo object and from the local storage / jsonbin.
 function removeTask(e) {
     const confirmMessage = confirm("Hey Champ! are you sure you want to delete the task?");
     if (confirmMessage) {
@@ -212,9 +184,10 @@ function removeTask(e) {
                 myToDo.splice(indexCounter, 1);
                 if (myToDo.length > 0) {
                     localStorage.setItem('my-todo', JSON.stringify(myToDo));
-                    // setPersistent();
+                    // setPersistent()
                 } else {
                     localStorage.clear();
+                    // myToDo = []
                     // setPersistent();
                     tasksTitles.style.display = 'none';
                 };
