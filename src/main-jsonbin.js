@@ -1,5 +1,6 @@
-// General variables defining
+// General variables declaration
 const body = document.body;
+const scrollButton = document.querySelector("#scroll-button");
 const viewSection = document.querySelector(".view-section");  
 const controlSection = document.querySelector(".control-section");  
 const textInput = document.querySelector('#text-input'); 
@@ -11,18 +12,14 @@ const sortButton = document.querySelector('#sort-button');
 const clearButton = document.getElementById("clear");
 const select = document.getElementById("priority-selector");
 const tasksTitles = document.querySelector(".task-titles");
-const scrollButton = document.querySelector("#scroll-button");
-
 
 // JSON file storing the tasks data 
 let myToDo = [];
 
-// getPersistent()
 // All the events handlers 
 addTaskButton.addEventListener('click', createSkeletonTomyToDo);
 addTaskButton.addEventListener('click', appendDataToTasksDiv);
 addTaskButton.addEventListener('click', appendTaskTomyToDo);
-// addTaskButton.addEventListener('click', appendToLocalStorage);
 addTaskButton.addEventListener('click',CounterFunction);
 sortButton.addEventListener('click', sortmyToDo);
 clearButton.addEventListener('click', clearAll);
@@ -40,49 +37,9 @@ function smoothScroll(e) {
   }
 
 // EventListener of addTaskButton.
-// On page reloading all the data is retrieved from the local storage / jsonbin.
-// New Dom tree is being built with a division into <div> tags.
-// The objects from the local storage / jsonbin are being appended to the <div>s.
-async function onReload() {
-    await getPersistent();
-
-    if (myToDo.length < 0) return;
-    let objectsofmyToDo = myToDo;
-    // if (localStorage.length === 0) return;
-    // let objectsofmyToDo = JSON.parse(localStorage.getItem('my-todo'));
-    
-    for (let i = 0; i < objectsofmyToDo.length; i++) {
-        createSkeletonTomyToDo();
-
-        let valuesOfmyToDoObject = Object.values(objectsofmyToDo[i]);
-        prioritySelector.value = valuesOfmyToDoObject[0];
-        textInput.value = valuesOfmyToDoObject[2];
-
-        appendDataToTasksDiv();
-
-        let datesDivs = document.querySelectorAll(".todo-created-at")
-        let dateInMilliseconds = Number(valuesOfmyToDoObject[1]);
-        let sqlDate = (new Date(dateInMilliseconds)).toLocaleString("en-GB").split(',').join(' ');
-        datesDivs[datesDivs.length - 1].textContent = sqlDate;
-    }
-    // myToDo = JSON.parse(localStorage.getItem('my-todo'))
-    CounterFunction()
-}
-
-// Counts how many children the view-section has.
-// Each child is a task.
-function CounterFunction() {
-    counter.textContent = viewSection.childElementCount;
-    if (counter.textContent === '0') {
-        counterLabel.textContent = "You made all the tasks!";
-        counter.textContent = "";
-        return;
-    } counterLabel.textContent = 'Total tasks you have left is:';
-}
-
-// EventListener of addTaskButton.
 // Function to build the DOM tree divided into div tags. 
 function createSkeletonTomyToDo() {
+    if (textInput.value === '' && myToDo.lengt >= 0) return; // prevent adding a task when input is empty.
 
     const todoContainer = document.createElement('div'); // main task container
     todoContainer.classList.add("todo-container");
@@ -113,39 +70,35 @@ function createSkeletonTomyToDo() {
                          checkButton);
 
     viewSection.appendChild(todoContainer);
+    tasksTitles.style.display = 'inline-block'; //hide the task's titles
+
 }
 
-// EventListener of addTaskButton.
-// On each click on the "add button" - the priority, date and the task's name are being wrapped inside divs.
-// All the divs were created in the "createSkeletonTomyToDo" function.
 function appendDataToTasksDiv() {
-    if (textInput.value === '' && localStorage.length > 0 && myToDo.length === 0) return;
-    if (textInput.value !== '' && prioritySelector.value === '') prioritySelector.value = 1; //set default priority to 1
+    if (textInput.value === '' && myToDo.lengt >= 0) return; // prevent adding a task when input is empty.
 
+    if (textInput.value !== '' && prioritySelector.value === '') prioritySelector.value = 1; //set default priority to 1
     let prioritiesDivs = document.querySelectorAll(".todo-priority");
     prioritiesDivs[prioritiesDivs.length - 1].textContent = prioritySelector.value;
 
     let textDivs = document.querySelectorAll(".todo-text")
     textDivs[textDivs.length - 1].textContent = textInput.value;
-
     
     let datesDivs = document.querySelectorAll(".todo-created-at")
-    let taskDate = new Date();
-    let dateForUser = taskDate.toLocaleString("en-GB");
-    datesDivs[datesDivs.length - 1].textContent = dateForUser;
-    
+    let taskDate = (new Date).toISOString().slice(0,19).replace("T"," ");
+    taskDate = taskDate.slice(0, 12) +  String(Number(taskDate[12]) + 2) + taskDate.slice(13, taskDate.length)
+    datesDivs[datesDivs.length - 1].textContent = taskDate;
     controlSection.reset(); //clean the input and priority boxes
-    tasksTitles.style.display = 'inline-block'; //hide the task's titles
 };
 
 // EventListener of addTaskButton.
-// push the task's data into the myToDo JSON object.
+// push the task's data into the myToDo JSON.
 // the date is converted to milliseconds.
 function appendTaskTomyToDo() {
     let lastDiv = viewSection.lastChild;
         const dateForUser = (lastDiv.querySelector(".todo-created-at").textContent);
-        const [first, second] = dateForUser.split(',').map(item => item.trim());
-        const [day, month, year] = first.split('/');
+        const [first, second] = dateForUser.split(' ').map(item => item.trim());
+        const [year, month, day] = first.split('-');
         const [hours, minutes, seconds] = second.split(':');
         const dateFormyToDo = new Date(year, month - 1, day, hours, minutes, seconds); 
     let taskInfo = {
@@ -157,15 +110,9 @@ function appendTaskTomyToDo() {
     setPersistent();
 }   
 
-// EventListener of addTaskButton.
-// Save myToDo in the local storage
-// function appendToLocalStorage() {
-//     localStorage.setItem('my-todo', JSON.stringify(myToDo));
-// }
-
 // EventListener of sortButton.
-// looping through all the task's main div (class="todo-container") and change the siblings order in the DOM tree.
-// assign myToDo with the sorted values and set it in the local storage / jsonbin.
+// looping through all the task's main div (class="todo-container") and change the siblings' order in the DOM tree.
+// assign myToDo with the sorted values to the local storage / jsonbin.
 function sortmyToDo() {
     const taskDiv = Array.prototype.slice.call(document.querySelectorAll('.todo-container'));
     let i = 0;
@@ -180,12 +127,11 @@ function sortmyToDo() {
         i++;
     };
     myToDo = myToDo.sort(function (a, b) {return b.priority - a.priority});
-    // localStorage.setItem('my-todo', JSON.stringify(myToDo));
     setPersistent();
 };
 
 // EventListener of sortButton.
-// remove a task from the DOM tree, from the myToDo object and from the local storage / jsonbin.
+// remove a task's div from the DOM tree and the object from myToDo and local storage / jsonbin.
 function removeTask(e) {
     const confirmMessage = confirm("Hey Champ! are you sure you want to delete the task?");
     if (confirmMessage) {
@@ -196,13 +142,8 @@ function removeTask(e) {
         for (task of myToDo) {
             if (task.text === taskText) {
                 myToDo.splice(indexCounter, 1);
-                if (myToDo.length > 0) {
-                    // localStorage.setItem('my-todo', JSON.stringify(myToDo));
-                    setPersistent()
-                } else {
-                    // localStorage.clear();
-                    myToDo = []
-                    setPersistent();
+                setPersistent()
+                if (myToDo.length === 0) {
                     tasksTitles.style.display = 'none';
                 };
             };
@@ -212,13 +153,23 @@ function removeTask(e) {
     };
 };
 
+// Counts how many children the view-section has.
+// show text according to the number
+function CounterFunction() {
+    counter.textContent = viewSection.childElementCount;
+    if (counter.textContent === '0' || counter.textContent === "") {
+        counterLabel.textContent = "You made all the tasks!";
+        counter.textContent = "";
+        return;
+    } counterLabel.textContent = 'Total remaining tasks are: ';
+}
+
 // EventListener of clearButton.
 // clear the local storage and all the viewSection content.
 function clearAll() {
     viewSection.textContent = '';
     myToDo = [];
     setPersistent(); 
-    // localStorage.clear()
     CounterFunction();
     controlSection.reset();
     tasksTitles.style.display = 'none';
@@ -230,3 +181,31 @@ function checkTask(e) {
     let task = e.target.parentNode;
     task.classList.toggle("check-task");
 }
+
+// EventListener of addTaskButton.
+// On page reloading all the data is retrieved from the local storage / jsonbin.
+// New Dom tree is being built with a division into <div> tags.
+// The objects from the local storage / jsonbin are being appended to the <div>s.
+async function onReload() {
+    await getPersistent();
+    if (myToDo.length < 1) {
+        tasksTitles.style.display = 'none';
+        CounterFunction();
+        return;
+    }
+
+    for (let i = 0; i < myToDo.length; i++) {
+        createSkeletonTomyToDo();
+        let valuesOfmyToDoObject = Object.values(myToDo[i]);
+        prioritySelector.value = valuesOfmyToDoObject[0];
+        textInput.value = valuesOfmyToDoObject[2];
+        
+        appendDataToTasksDiv();
+        // convert milliseconds back to SQL date
+        let datesDivs = document.querySelectorAll(".todo-created-at")
+        let dateInMilliseconds = Number(valuesOfmyToDoObject[1]);
+        let sqlDate = (new Date(dateInMilliseconds)).toISOString().slice(0,19).replace("T"," ");
+        datesDivs[datesDivs.length - 1].textContent = sqlDate;
+    }
+    CounterFunction()
+} 
