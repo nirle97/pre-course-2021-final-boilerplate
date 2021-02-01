@@ -1,3 +1,10 @@
+//This process of adding a text works in a number of steps after click the add button:
+// 1. The DOM tree with all the requires divs in established: function "createSkeletonTomyToDo".
+// 2. The data from the user is assign to the divs: function "appendDataToTasksDiv".
+// 3. The data from the user is assign to the JSON object "myToDo" variable: function "appendTaskTomyToDo" (also set the data in jsonbin).
+// 4. the data is saved in the local storage / in the jsonbin server: function "appendToLocalStorage".
+// All the rest features are based on the functions above.
+
 // General variables declaration
 const body = document.body;
 const scrollButton = document.querySelector("#scroll-button");
@@ -16,7 +23,6 @@ const tasksTitles = document.querySelector(".task-titles");
 // JSON file storing the tasks data 
 let myToDo = [];
 
-// getPersistent()
 // All the events handlers 
 addTaskButton.addEventListener('click', createSkeletonTomyToDo);
 addTaskButton.addEventListener('click', appendDataToTasksDiv);
@@ -31,7 +37,6 @@ function smoothScroll(e) {
     e.preventDefault();
     const href = scrollButton.getAttribute("href");
     const offsetTop = document.querySelector(href).offsetTop;
-   
     scroll({
       top: offsetTop,
       behavior: "smooth"
@@ -77,6 +82,8 @@ function createSkeletonTomyToDo() {
     CounterFunction()
 }
 
+// EventListener of addTaskButton.
+// Take the data from the user and append it to the divs (convert date to SQL format).
 function appendDataToTasksDiv() {
     if (textInput.value === '' && localStorage.length === 0 ||
     textInput.value === '' &&  localStorage.length > 0 && myToDo.length > 0) return; // prevent adding a task when input is empty.
@@ -121,8 +128,8 @@ function appendToLocalStorage() {
 }
 
 // EventListener of sortButton.
-// looping through all the task's main div (class="todo-container") and change the siblings' order in the DOM tree.
-// assign myToDo with the sorted values to the local storage / jsonbin.
+// Looping through all the task's main div (class="todo-container") and change the siblings' order in the DOM tree.
+// Assign the sorted values into myToDo and to the local storage / jsonbin.
 function sortmyToDo() {
     const taskDiv = Array.prototype.slice.call(document.querySelectorAll('.todo-container'));
     let i = 0;
@@ -207,7 +214,7 @@ function onReload() {
     
     let objectsofmyToDo = JSON.parse(localStorage.getItem('my-todo'));
     
-    for (let i = 0; i < objectsofmyToDo.length; i++) {
+    for (let i = 0; i < objectsofmyToDo.length; i++) { //loop through all the tasks and re-create the DOM tree.
         createSkeletonTomyToDo();
         
         let valuesOfmyToDoObject = Object.values(objectsofmyToDo[i]);
@@ -216,7 +223,7 @@ function onReload() {
         
         appendDataToTasksDiv();
         
-        // convert milliseconds to SQL date
+        // convert milliseconds back to SQL date
         let datesDivs = document.querySelectorAll(".todo-created-at")
         let dateInMilliseconds = Number(valuesOfmyToDoObject[1]);
         let sqlDate = (new Date(dateInMilliseconds)).toISOString().slice(0,19).replace("T"," ");

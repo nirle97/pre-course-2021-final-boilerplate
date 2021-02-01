@@ -1,3 +1,10 @@
+//This process of adding a text works in a number of steps after click the add button:
+// 1. The DOM tree with all the requires divs in established: function "createSkeletonTomyToDo".
+// 2. The data from the user is assign to the divs: function "appendDataToTasksDiv".
+// 3. The data from the user is assign to the JSON object "myToDo" variable: function "appendTaskTomyToDo" (also set the data in jsonbin).
+// 4. the data is saved in the local storage / in the jsonbin server: function "appendToLocalStorage".
+// All the rest features are based on the functions above.
+
 // General variables declaration
 const body = document.body;
 const scrollButton = document.querySelector("#scroll-button");
@@ -74,6 +81,8 @@ function createSkeletonTomyToDo() {
 
 }
 
+// EventListener of addTaskButton.
+// Take the data from the user and append it to the divs (convert date to SQL format).
 function appendDataToTasksDiv() {
     if (textInput.value === '' && myToDo.lengt >= 0) return; // prevent adding a task when input is empty.
 
@@ -88,6 +97,7 @@ function appendDataToTasksDiv() {
     let taskDate = (new Date).toISOString().slice(0,19).replace("T"," ");
     taskDate = taskDate.slice(0, 12) +  String(Number(taskDate[12]) + 2) + taskDate.slice(13, taskDate.length)
     datesDivs[datesDivs.length - 1].textContent = taskDate;
+
     controlSection.reset(); //clean the input and priority boxes
 };
 
@@ -194,7 +204,7 @@ async function onReload() {
         return;
     }
 
-    for (let i = 0; i < myToDo.length; i++) {
+    for (let i = 0; i < myToDo.length; i++) { //loop through all the tasks and re-create the DOM tree.
         createSkeletonTomyToDo();
         let valuesOfmyToDoObject = Object.values(myToDo[i]);
         prioritySelector.value = valuesOfmyToDoObject[0];
