@@ -22,7 +22,7 @@ let myToDo = [];
 addTaskButton.addEventListener('click', createSkeletonTomyToDo);
 addTaskButton.addEventListener('click', appendDataToTasksDiv);
 addTaskButton.addEventListener('click', appendTaskTomyToDo);
-addTaskButton.addEventListener('click', appendToLocalStorage);
+// addTaskButton.addEventListener('click', appendToLocalStorage);
 addTaskButton.addEventListener('click',CounterFunction);
 sortButton.addEventListener('click', sortmyToDo);
 clearButton.addEventListener('click', clearAll);
@@ -43,13 +43,13 @@ function smoothScroll(e) {
 // On page reloading all the data is retrieved from the local storage / jsonbin.
 // New Dom tree is being built with a division into <div> tags.
 // The objects from the local storage / jsonbin are being appended to the <div>s.
-function onReload() {
-    // await getPersistent();
+async function onReload() {
+    await getPersistent();
 
-    // if (myToDo.length < 0) return;
-    // let objectsofmyToDo = myToDo;
-    if (localStorage.length === 0) return;
-    let objectsofmyToDo = JSON.parse(localStorage.getItem('my-todo'));
+    if (myToDo.length < 0) return;
+    let objectsofmyToDo = myToDo;
+    // if (localStorage.length === 0) return;
+    // let objectsofmyToDo = JSON.parse(localStorage.getItem('my-todo'));
     
     for (let i = 0; i < objectsofmyToDo.length; i++) {
         createSkeletonTomyToDo();
@@ -65,7 +65,7 @@ function onReload() {
         let sqlDate = (new Date(dateInMilliseconds)).toLocaleString("en-GB").split(',').join(' ');
         datesDivs[datesDivs.length - 1].textContent = sqlDate;
     }
-    myToDo = JSON.parse(localStorage.getItem('my-todo'))
+    // myToDo = JSON.parse(localStorage.getItem('my-todo'))
     CounterFunction()
 }
 
@@ -154,14 +154,14 @@ function appendTaskTomyToDo() {
         "text": `${lastDiv.querySelector(".todo-text").textContent}`
     };
     myToDo.push(taskInfo);
-    // setPersistent();
+    setPersistent();
 }   
 
 // EventListener of addTaskButton.
 // Save myToDo in the local storage
-function appendToLocalStorage() {
-    localStorage.setItem('my-todo', JSON.stringify(myToDo));
-}
+// function appendToLocalStorage() {
+//     localStorage.setItem('my-todo', JSON.stringify(myToDo));
+// }
 
 // EventListener of sortButton.
 // looping through all the task's main div (class="todo-container") and change the siblings order in the DOM tree.
@@ -180,8 +180,8 @@ function sortmyToDo() {
         i++;
     };
     myToDo = myToDo.sort(function (a, b) {return b.priority - a.priority});
-    localStorage.setItem('my-todo', JSON.stringify(myToDo));
-    // setPersistent();
+    // localStorage.setItem('my-todo', JSON.stringify(myToDo));
+    setPersistent();
 };
 
 // EventListener of sortButton.
@@ -197,12 +197,12 @@ function removeTask(e) {
             if (task.text === taskText) {
                 myToDo.splice(indexCounter, 1);
                 if (myToDo.length > 0) {
-                    localStorage.setItem('my-todo', JSON.stringify(myToDo));
-                    // setPersistent()
+                    // localStorage.setItem('my-todo', JSON.stringify(myToDo));
+                    setPersistent()
                 } else {
-                    localStorage.clear();
+                    // localStorage.clear();
                     myToDo = []
-                    // setPersistent();
+                    setPersistent();
                     tasksTitles.style.display = 'none';
                 };
             };
@@ -217,8 +217,8 @@ function removeTask(e) {
 function clearAll() {
     viewSection.textContent = '';
     myToDo = [];
-    // setPersistent(); 
-    localStorage.clear()
+    setPersistent(); 
+    // localStorage.clear()
     CounterFunction();
     controlSection.reset();
     tasksTitles.style.display = 'none';
