@@ -38,7 +38,7 @@ to the wanted method of data storage.
     the “Let’s do it” button, giving the user a nice and smooth feeling
     from the website.
 
-![](media/image1.gif){width="5.392308617672791in"
+![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/welcome%20page%20gif.gif){width="5.392308617672791in"
 height="3.0374398512685916in"}
 
 1.  In the main screen the user writes the task name and choose the
@@ -56,7 +56,7 @@ height="3.0374398512685916in"}
         is sure.\
         If so, delete a specific task.
 
-    b.  ![](media/image2.gif){width="5.715277777777778in"
+    b.  ![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/remove%20and%20check.gif){width="5.715277777777778in"
         height="3.214583333333333in"}***Check***: draw a text decoration
         of line-through the task.
 
@@ -70,7 +70,7 @@ height="3.0374398512685916in"}
 
     b.  Clear – delete all the tasks and clear the input box.
 
-![](media/image3.gif){width="6.254166666666666in"
+![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/sort%20and%20clear.gif){width="6.254166666666666in"
 height="3.5229166666666667in"}
 
 Resources
