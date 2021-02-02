@@ -38,8 +38,7 @@ to the wanted method of data storage.
     the “Let’s do it” button, giving the user a nice and smooth feeling
     from the website.
 
-![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/welcome%20page%20gif.gif){width="5.392308617672791in"
-height="3.0374398512685916in"}
+![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/welcome%20page%20gif.gif)
 
 1.  In the main screen the user writes the task name and choose the
     priority between a score of 1-5 and ***3 categories***: “Not
@@ -56,9 +55,7 @@ height="3.0374398512685916in"}
         is sure.\
         If so, delete a specific task.
 
-    b.  ![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/remove%20and%20check.gif){width="5.715277777777778in"
-        height="3.214583333333333in"}***Check***: draw a text decoration
-        of line-through the task.
+    b.  ***Check***: draw a text decoration of line-through the task.
 
 4.  Beneath the tasks list the user can see a counter with the number of
     the total tasks and the text: “You made all the tasks!” if there
@@ -70,8 +67,7 @@ height="3.0374398512685916in"}
 
     b.  Clear – delete all the tasks and clear the input box.
 
-![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/sort%20and%20clear.gif){width="6.254166666666666in"
-height="3.5229166666666667in"}
+![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/sort%20and%20clear.gif)
 
 Resources
 
