@@ -56,8 +56,9 @@ to the wanted method of data storage.
         If so, delete a specific task.
 
     b.  ***Check***: draw a text decoration of line-through the task.
+    ![](https://github.com/nirle97/pre-course-2021-final-boilerplate/blob/main/remove%20and%20check.gif)
 
-4.  Beneath the tasks list the user can see a counter with the number of
+4.  Beneath the tasks list the user can see a counter with the of
     the total tasks and the text: “You made all the tasks!” if there
     aren’t any, or “Total remaining tasks are: (number of tasks)
 
