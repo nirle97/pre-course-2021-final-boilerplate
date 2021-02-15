@@ -19,7 +19,7 @@ const sortButton = document.querySelector('#sort-button');
 const clearButton = document.getElementById("clear");
 const select = document.getElementById("priority-selector");
 const tasksTitles = document.querySelector(".task-titles");
-
+const spinner = document.querySelector('img[class="spinner-image"]');
 // JSON file storing the tasks data 
 let myToDo = [];
 
