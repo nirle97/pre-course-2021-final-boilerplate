@@ -114,7 +114,7 @@ function appendTaskTomyToDo() {
     let taskInfo = {
         "priority": `${lastDiv.querySelector(".todo-priority").textContent}`,
         "date": `${dateFormyToDo.getTime()}`, //convert date to milliseconds
-        "text": `${lastDiv.querySelector(".todo-text").textContent}`
+        "text": `${lastDiv.querySelector(".todo-text").textContent}`,
     };
     myToDo.push(taskInfo);
     setPersistent();
@@ -184,13 +184,28 @@ function clearAll() {
     controlSection.reset();
     tasksTitles.style.display = 'none';
 }
-
 // EventListener of the check-Button.
 // add a style of line-through
 function checkTask(e) {
     let task = e.target.parentNode;
     task.classList.toggle("check-task");
-}
+    for (let i = 0; i < document.querySelectorAll("div.todo-container").length; i++) {
+        if (document.querySelectorAll("div.todo-container")[i].getAttribute("class").includes("check-task")) {
+            myToDo[i]["was-checked"] = true;
+        } else {
+            myToDo[i]["was-checked"] = false;
+        }
+    };
+    setPersistent();
+};
+
+function recheckTaskOnReload() {
+    for (let i = 0; i < myToDo.length; i++) {
+        if (myToDo[i]["was-checked"] === true) {
+            document.querySelectorAll("div.todo-container")[i].classList.toggle("check-task");
+        };
+    };
+};
 
 // EventListener of addTaskButton.
 // On page reloading all the data is retrieved from the local storage / jsonbin.
@@ -217,5 +232,6 @@ async function onReload() {
         let sqlDate = (new Date(dateInMilliseconds)).toISOString().slice(0,19).replace("T"," ");
         datesDivs[datesDivs.length - 1].textContent = sqlDate;
     }
+    recheckTaskOnReload();
     CounterFunction()
 } 
