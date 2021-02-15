@@ -23,7 +23,7 @@
       <div class="doit-logo"><img src="./Media/doitLogo.png" alt="doit-logo" id="task-page"></div>
       <h2 class="slogan">DO-IT <br> Simple & Elegant Way To organize Your Tasks</h2>
       <form class="control-section">
-        <input type="text" name="task" id="text-input" placeholder="Let's Do it !" maxlength="30">
+        <input type="text" name="task" id="text-input" placeholder="Let's Do it !" maxlength="30" onkeydown="return event.key != 'Enter';">
         <label for="priority" class="priority-label">Priority</label>
         <select name="priority" id="priority-selector"><i class="far fa-arrow-alt-circle-down"></i>
           <option value="" disabled selected>Is It Important?</option>
