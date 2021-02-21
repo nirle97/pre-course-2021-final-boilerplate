@@ -20,6 +20,8 @@ const clearButton = document.getElementById("clear");
 const select = document.getElementById("priority-selector");
 const tasksTitles = document.querySelector(".task-titles");
 const spinner = document.querySelector('img[class="spinner-image"]');
+// const { v4: uuidv4 } = require("uuid");
+// console.log(uuidv4());
 // JSON file storing the tasks data 
 let myToDo = [];
 
@@ -95,7 +97,7 @@ function appendDataToTasksDiv() {
     
     let datesDivs = document.querySelectorAll(".todo-created-at")
     let taskDate = (new Date).toISOString().slice(0,19).replace("T"," ");
-    taskDate = taskDate.slice(0, 12) +  String(Number(taskDate[12]) + 2) + taskDate.slice(13, taskDate.length)
+    taskDate = taskDate.slice(0, 11) + (Number(taskDate.slice(11, 13)) + 2) + taskDate.slice(13, taskDate.length)
     datesDivs[datesDivs.length - 1].textContent = taskDate;
 
     controlSection.reset(); //clean the input and priority boxes
@@ -117,13 +119,13 @@ function appendTaskTomyToDo() {
         "text": `${lastDiv.querySelector(".todo-text").textContent}`,
     };
     myToDo.push(taskInfo);
-    setPersistent();
+    postRequest(taskInfo);
 }   
 
 // EventListener of sortButton.
 // looping through all the task's main div (class="todo-container") and change the siblings' order in the DOM tree.
 // assign myToDo with the sorted values to the local storage / jsonbin.
-function sortmyToDo() {
+async function sortmyToDo() {
     const taskDiv = Array.prototype.slice.call(document.querySelectorAll('.todo-container'));
     let i = 0;
     while (i < taskDiv.length - 1) {
@@ -137,9 +139,12 @@ function sortmyToDo() {
         i++;
     };
     myToDo = myToDo.sort(function (a, b) {return b.priority - a.priority});
-    setPersistent();
-};
+    await deleteAllRequest();
 
+    for (task of myToDo) {
+        await postRequest(task)     
+    };
+};
 // EventListener of sortButton.
 // remove a task's div from the DOM tree and the object from myToDo and local storage / jsonbin.
 function removeTask(e) {
@@ -151,8 +156,8 @@ function removeTask(e) {
         let indexCounter = 0;
         for (task of myToDo) {
             if (task.text === taskText) {
+                deleteRequest(task.date)
                 myToDo.splice(indexCounter, 1);
-                setPersistent()
                 if (myToDo.length === 0) {
                     tasksTitles.style.display = 'none';
                 };
@@ -179,7 +184,7 @@ function CounterFunction() {
 function clearAll() {
     viewSection.textContent = '';
     myToDo = [];
-    setPersistent(); 
+    deleteAllRequest(); 
     CounterFunction();
     controlSection.reset();
     tasksTitles.style.display = 'none';
@@ -195,8 +200,8 @@ function checkTask(e) {
         } else {
             myToDo[i]["was-checked"] = false;
         }
+        putRequest(myToDo[i]["date"],  myToDo[i]);
     };
-    setPersistent();
 };
 
 function recheckTaskOnReload() {
@@ -212,7 +217,8 @@ function recheckTaskOnReload() {
 // New Dom tree is being built with a division into <div> tags.
 // The objects from the local storage / jsonbin are being appended to the <div>s.
 async function onReload() {
-    await getPersistent();
+    await getRequest();
+    console.log(myToDo);
     if (myToDo.length < 1) {
         tasksTitles.style.display = 'none';
         CounterFunction();
