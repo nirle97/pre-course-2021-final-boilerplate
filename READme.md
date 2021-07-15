@@ -2,11 +2,6 @@
 
 *📋 To Do List – ReadMe *
 
-[Link](https://nirle97.github.io/pre-course-2021-final-boilerplate/src/index)
-*to GitHub Page -*
-[Link](https://drive.google.com/drive/u/0/folders/1nuYFyXPHc58K611upYpntbDDFYNb5gCw)
-*to interview video*
-
 **<span style="font-variant:small-caps;">About the Program</span>**
 
 This program is a website creates a list of tasks according to the user
